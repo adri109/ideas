@@ -12,8 +12,13 @@ en que se usan; no hace falta leerlas todas de golpe.
 | Días 11-12 | [04 · Oferta en una página](04-oferta-una-pagina.md) | El documento que se lee en 90 segundos y se manda por WhatsApp |
 | Días 11-12 | [05 · Economía unitaria](05-economia-unitaria.csv) | Medir el coste real por conversación en lugar de estimarlo |
 | Día 14 y cada dos semanas | [06 · Registro de decisiones](06-registro-de-decisiones.md) | La puerta go/no-go y el historial de decisiones con fecha |
+| Días 1-2, si trabajas por cuenta ajena | [07 · Acuerdo con tu empresa](07-acuerdo-con-tu-empresa.md) | Qué buscar en tu contrato, cómo plantear la conversación y la página que hay que firmar antes de construir |
 
-## Las tres cosas que hay que recordar
+Si trabajas por cuenta ajena y quieres probarlo primero en tu empresa, empieza por la plantilla
+07 y por el [capítulo 11](../docs/11-empezar-desde-dentro.md), que adapta el sprint a dos
+carriles en paralelo.
+
+## Las cuatro cosas que hay que recordar
 
 1. **Cero código durante el sprint.** La demo se monta con herramientas de terceros. Escribir
    software antes de la puerta del día 14 es la forma más cara de evitar una conversación
@@ -22,3 +27,6 @@ en que se usan; no hace falta leerlas todas de golpe.
    la única partida capaz de destruir el margen sin avisar.
 3. **La decisión del día 14 se escribe.** Con fecha, con los tres números delante y con la
    frase de qué te haría cambiar de opinión.
+4. **Si construyes dentro de tu empleo, el acuerdo se firma antes.** Por defecto, los derechos
+   de explotación del software creado en el ejercicio de tu puesto son de la empresa
+   (art. 97.4 TRLPI), y la excepción es un pacto por escrito.

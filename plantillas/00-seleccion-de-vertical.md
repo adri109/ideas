@@ -25,6 +25,13 @@ Descarta directamente, sin puntuar, cualquier vertical donde el agente pudiera p
 consejo profesional en **salud, derecho o finanzas**: son los sectores con más restricciones y
 donde un error cuesta más que el contrato.
 
+**Si trabajas por cuenta ajena**, tu sector puntúa 5 en acceso y es tentador elegirlo, pero
+vender ahí es competir con tu empleador. La opción correcta es **el sector adyacente**: mismo
+flujo de trabajo (consulta urgente → presupuesto → visita), tu conocimiento se transfiere casi
+entero y no compites con nadie. Ver [capítulo 11](../docs/11-empezar-desde-dentro.md), apartado
+11.5. En la hoja de puntuación, puntúa el acceso del sector adyacente contando los contactos que
+tu sector te abre en él, que suelen ser bastantes.
+
 ## Hoja de puntuación
 
 Copia esta tabla y rellénala. El ejemplo está para que se vea el formato, bórralo.
