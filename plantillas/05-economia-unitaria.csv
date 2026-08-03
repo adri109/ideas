@@ -1,0 +1,20 @@
+bloque,concepto,unidad,valor_referencia,tu_valor_medido,notas
+ingreso,implantacion inicial,€ una vez,500-1500,,Filtra curiosos y cubre el trabajo de arranque
+ingreso,cuota base mensual,€/mes,300-600,,Nivel 1 de mantenimiento del mercado: 300-1500 $/mes
+ingreso,variable por cita confirmada,€/cita,15-40,,Alinea precio con valor; es la parte que cierra la venta
+ingreso,citas confirmadas al mes,citas,8-25,,Medir desde el primer cliente
+coste,numero de telefono,€/mes,5-15,,Uno por cliente
+coste,minutos de voz entrantes,€/min,MEDIR,,PARTIDA CRITICA: es la que puede desviar el margen
+coste,transcripcion y sintesis de voz,€/min,MEDIR,,Incluir en el coste por minuto real
+coste,modelo de lenguaje por conversacion,€/conversacion,MEDIR,,Enrutar a modelo pequeño para clasificar y grande solo en casos difíciles
+coste,infraestructura y orquestacion,€/mes,5-20,,Autoalojado permite retener el 90-95 % del ingreso
+coste,mensajeria y notificaciones,€/mes,0-10,,WhatsApp Business API si aplica
+coste,soporte y ajustes,horas/mes,1-3,,Valora tu hora aunque no la factures
+derivado,ingreso medio por cliente,€/mes,CALCULAR,,cuota base + (citas x variable)
+derivado,coste variable por cliente,€/mes,CALCULAR,,suma de costes por cliente
+derivado,margen bruto por cliente,%,>75,,Si baja de 60 % revisa el enrutado de modelos antes que el precio
+derivado,inferencia sobre ingreso,%,10-25,,Regla del sector para mantener margen sano
+derivado,clientes para 3000 €/mes,clientes,CALCULAR,,Hito de la fase 2
+derivado,clientes para 10000 €/mes,clientes,CALCULAR,,Hito de la fase 4
+control,tope de gasto configurado en cada API,si/no,si,,El 78 % de responsables de IT reporto cargos inesperados por consumo de IA
+control,alerta de consumo anomalo,si/no,si,,Un bucle de agente sin tope se come el margen de un mes en una noche

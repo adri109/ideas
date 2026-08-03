@@ -1,0 +1,30 @@
+bloque,metrica,unidad,como_se_mide,valor_antes,valor_despues,ahorro_estimado_€_mes,notas
+canales,consultas por correo 1,nº/semana,contar,,,,Anotar tambien quien lo atiende y en que horario
+canales,consultas por correo 2,nº/semana,contar,,,,La duplicidad de buzon es el "lio" declarado
+canales,consultas por WhatsApp,nº/semana,contar,,,,
+canales,consultas por telefono fijo,nº/semana,contar,,,,Incluir las que suenan y no se cogen
+canales,consultas en mostrador,nº/semana,contar,,,,Hoy invisibles: hace falta hoja de captura
+canales,consultas que llegan por dos canales a la vez,nº/semana,detectar duplicados por cliente,,,,Trabajo hecho dos veces
+canales,canal con peor tiempo de respuesta,texto,comparar los cinco,,,,Sospecha inicial: fijo fuera de horario y correo 2
+canales,consultas perdidas o sin registrar,nº/semana,estimar por comparacion entre canales,,,,x ticket medio x conversion = coste del agujero
+presupuestos,presupuestos emitidos,nº/semana,contar los enviados,,,,Incluye los que se quedan en nada
+presupuestos,tiempo medio por presupuesto,minutos,cronometrar 10 seguidos,,,,Desde que entra la consulta hasta que sale el precio
+presupuestos,tiempo hasta responder,horas,hora de entrada vs hora de respuesta,,,,El dato que mas convence al cliente final
+presupuestos,presupuestos sin contestar por el cliente,%,contar los que no reciben respuesta,,,,Candidatos al seguimiento automatico a 3-7-14 dias
+presupuestos,consultas fuera de horario,nº/semana,mensajes recibidos fuera de 9-18h,,,,
+archivos,archivos que sirven tal cual,%,de cada 10 recibidos,,,,Si es menor del 50 % la cuña 1 tiene sentido
+archivos,veces que hay que pedir el archivo otra vez,nº/semana,contar,,,,Cada ida y vuelta son horas de calendario
+archivos,tiempo de retoque por trabajo,minutos,cronometrar 10 trabajos,,,,El "salvar el papel" del dia a dia
+archivos,reimpresiones por problema de archivo,nº/mes,contar,,,,Multiplicar por coste de material + tiempo
+montaje,tiempo de montaje por hoja o pliego,minutos,cronometrar 10,,,,Comparar manual vs nester automatico
+montaje,metros de film consumidos,m/mes,lectura de consumo,,,,
+montaje,metros de film utiles,m/mes,superficie estampada / ancho,,,,Aprovechamiento = utiles / consumidos
+montaje,aprovechamiento,%,utiles / consumidos x 100,,,,Manual suele rondar 60-70 %; auto-nesting reclama 85-95 %
+montaje,coste del metro de film,€/m,factura de proveedor,,,,Rellenar con tu precio real
+grupos,pedidos de grupo (club/peña/empresa),nº/mes,contar,,,,
+grupos,tiempo en recoger tallas y nombres,minutos/pedido,cronometrar,,,,El dolor de la cuña 2
+grupos,errores de talla o nombre,nº/mes,contar incidencias,,,,Cada error es una prenda perdida
+grupos,pedidos de grupo rechazados o evitados,nº/mes,preguntar al responsable,,,,Ingreso que hoy no se captura
+resumen,horas al mes recuperables,horas,sumar los ahorros de tiempo,,,,
+resumen,valor de la hora del taller,€/h,coste laboral cargado,,,,
+resumen,ahorro total estimado,€/mes,horas x valor hora + material,,,,Este es el numero de la conversacion del capitulo 11
