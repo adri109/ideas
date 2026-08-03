@@ -82,6 +82,11 @@ precio a mano.
 tipo de trabajo desestructurado que un ERP de 2015 no puede hacer y que un modelo de lenguaje sí,
 desde hace poco.
 
+> **Actualización con datos del taller:** los pedidos entran por dos correos distintos, teléfono
+> fijo, WhatsApp y mostrador. Eso convierte esta cuña en algo más grande y mejor definido —una
+> bandeja única de entrada— y separa el sitio donde se construye del mercado al que se vende. Ver
+> [capítulo 14](14-bandeja-unica.md), que sustituye la definición de producto de este apartado.
+
 ### Cuña 1 (recomendada) · Recepción inteligente de pedidos para talleres de personalización
 
 El agente lee el mensaje entrante (texto, imagen y hoja de cálculo), y:
