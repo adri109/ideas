@@ -1,4 +1,12 @@
 bloque,metrica,unidad,como_se_mide,valor_antes,valor_despues,ahorro_estimado_€_mes,notas
+canales,consultas por correo 1,nº/semana,contar,,,,Anotar tambien quien lo atiende y en que horario
+canales,consultas por correo 2,nº/semana,contar,,,,La duplicidad de buzon es el "lio" declarado
+canales,consultas por WhatsApp,nº/semana,contar,,,,
+canales,consultas por telefono fijo,nº/semana,contar,,,,Incluir las que suenan y no se cogen
+canales,consultas en mostrador,nº/semana,contar,,,,Hoy invisibles: hace falta hoja de captura
+canales,consultas que llegan por dos canales a la vez,nº/semana,detectar duplicados por cliente,,,,Trabajo hecho dos veces
+canales,canal con peor tiempo de respuesta,texto,comparar los cinco,,,,Sospecha inicial: fijo fuera de horario y correo 2
+canales,consultas perdidas o sin registrar,nº/semana,estimar por comparacion entre canales,,,,x ticket medio x conversion = coste del agujero
 presupuestos,presupuestos emitidos,nº/semana,contar los enviados,,,,Incluye los que se quedan en nada
 presupuestos,tiempo medio por presupuesto,minutos,cronometrar 10 seguidos,,,,Desde que entra la consulta hasta que sale el precio
 presupuestos,tiempo hasta responder,horas,hora de entrada vs hora de respuesta,,,,El dato que mas convence al cliente final

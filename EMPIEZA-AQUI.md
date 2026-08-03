@@ -9,16 +9,19 @@ arranque.
 ### 1. Empieza a medir · 5 minutos hoy, 2 minutos al día
 
 Es lo único con plazo de entrega: necesitas dos semanas de datos, así que el reloj arranca hoy.
-No hace falta la hoja completa todavía. Abre una nota en el móvil y, a partir del próximo mensaje
-que entre, anota cuatro cosas por cada consulta:
+No hace falta la hoja completa todavía. Abre una nota en el móvil y, a partir de la próxima consulta
+que entre, anota cinco cosas:
 
 ```
-Hora en que entró · Hora en que se contestó · Minutos dedicados · ¿El archivo servía tal cual? (S/N)
+Canal (correo 1 / correo 2 / WhatsApp / fijo / mostrador) · Hora en que entró ·
+Hora en que se contestó · Minutos dedicados · ¿El archivo servía tal cual? (S/N)
 ```
 
-Nada más. Cuando lleves unos días y le cojas el ritmo, pásalo a
-[`plantillas/08-linea-base-imprenta.csv`](plantillas/08-linea-base-imprenta.csv), que tiene las
-veinte métricas completas.
+**El canal es la columna más importante**, porque con cinco puertas de entrada hoy no se puede saber
+ni cuánto entra ni por dónde se pierde ([capítulo 14](docs/14-bandeja-unica.md)). Cuando le cojas el
+ritmo, pásalo a [`plantillas/08-linea-base-imprenta.csv`](plantillas/08-linea-base-imprenta.csv), y
+retrata el funcionamiento del taller en
+[`plantillas/09-mapa-de-canales.md`](plantillas/09-mapa-de-canales.md).
 
 **Por qué esto primero:** sin línea base no puedes demostrar ninguna mejora, y la línea base no
 se puede reconstruir hacia atrás.

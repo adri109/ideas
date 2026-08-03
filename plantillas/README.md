@@ -13,7 +13,8 @@ en que se usan; no hace falta leerlas todas de golpe.
 | Días 11-12 | [05 · Economía unitaria](05-economia-unitaria.csv) | Medir el coste real por conversación en lugar de estimarlo |
 | Día 14 y cada dos semanas | [06 · Registro de decisiones](06-registro-de-decisiones.md) | La puerta go/no-go y el historial de decisiones con fecha |
 | Días 1-2, si trabajas por cuenta ajena | [07 · Acuerdo con tu empresa](07-acuerdo-con-tu-empresa.md) | Qué buscar en tu contrato, cómo plantear la conversación y la página que hay que firmar antes de construir |
-| Días 3-14, caso imprenta | [08 · Línea base de imprenta](08-linea-base-imprenta.csv) | Las 20 métricas de presupuestos, archivos, montaje y pedidos de grupo que hay que medir antes y después |
+| Días 3-14, caso imprenta | [08 · Línea base de imprenta](08-linea-base-imprenta.csv) | Las métricas de canales, presupuestos, archivos, montaje y pedidos de grupo que hay que medir antes y después |
+| Día 1, caso imprenta | [09 · Mapa de canales](09-mapa-de-canales.md) | Retrato de cómo funciona el taller hoy: las cinco puertas de entrada, los números del negocio y las dos versiones del cuello de botella |
 
 Si trabajas por cuenta ajena y quieres probarlo primero en tu empresa, empieza por la plantilla
 07 y por el [capítulo 11](../docs/11-empezar-desde-dentro.md), que adapta el sprint a dos
