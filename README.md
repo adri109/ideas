@@ -15,7 +15,10 @@ principal el tiempo y no el dinero, y una ruta creíble hasta 5.000-30.000 €/m
 
 **Si vas a empezar hoy**, el punto de entrada es el [capítulo 10](docs/10-siguiente-paso.md):
 un sprint de validación de 14 días que cuesta menos de 60 € y termina en una decisión escrita
-de seguir o cambiar, con todo el material listo en [`plantillas/`](plantillas/).
+de seguir o cambiar, con todo el material listo en [`plantillas/`](plantillas/). Y si trabajas
+por cuenta ajena y quieres probarlo primero en tu empresa, el [capítulo 11](docs/11-empezar-desde-dentro.md)
+adapta el plan a ese escenario, que es el mejor punto de partida posible siempre que el acuerdo
+sobre lo que construyes se firme antes de construirlo.
 
 **Lo que hay que evitar como punto de partida**: operar en mercados financieros con capital
 propio. Todo ese bloque ocupa la cola del ranking, y no por prejuicio sino por los datos —71 %
@@ -50,7 +53,8 @@ direccionales de crypto (1,93).
 | [8. Riesgos, legal y cumplimiento](docs/08-riesgos-legal-y-cumplimiento.md) | Artículo 50 del Reglamento de IA, límites de la CNMV, MiCA, protección de datos y riesgo de plataforma |
 | [9. Fuentes](docs/09-fuentes.md) | Todas las referencias utilizadas |
 | [10. El siguiente paso](docs/10-siguiente-paso.md) | Sprint de validación de 14 días, día a día, con la puerta go/no-go y sus cuatro desenlaces |
-| [Plantillas](plantillas/) | Selección de vertical, auditoría, guion de entrevista, mensajes, oferta, economía unitaria y registro de decisiones |
+| [11. Empezar desde dentro](docs/11-empezar-desde-dentro.md) | Cómo hacerlo si trabajas por cuenta ajena: de quién es lo que construyes, el sprint a dos carriles y por qué el vertical es el sector de al lado |
+| [Plantillas](plantillas/) | Selección de vertical, auditoría, guion de entrevista, mensajes, oferta, economía unitaria, registro de decisiones y acuerdo con tu empresa |
 
 ## Cómo está construido este informe
 
