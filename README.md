@@ -54,7 +54,8 @@ direccionales de crypto (1,93).
 | [9. Fuentes](docs/09-fuentes.md) | Todas las referencias utilizadas |
 | [10. El siguiente paso](docs/10-siguiente-paso.md) | Sprint de validación de 14 días, día a día, con la puerta go/no-go y sus cuatro desenlaces |
 | [11. Empezar desde dentro](docs/11-empezar-desde-dentro.md) | Cómo hacerlo si trabajas por cuenta ajena: de quién es lo que construyes, el sprint a dos carriles y por qué el vertical es el sector de al lado |
-| [Plantillas](plantillas/) | Selección de vertical, auditoría, guion de entrevista, mensajes, oferta, economía unitaria, registro de decisiones y acuerdo con tu empresa |
+| [12. Caso imprenta y DTF](docs/12-caso-imprenta-dtf.md) | Aplicación al caso real: qué ya existe y no hay que construir, dónde queda hueco y la corrección de la economía unitaria |
+| [Plantillas](plantillas/) | Selección de vertical, auditoría, guion de entrevista, mensajes, oferta, economía unitaria, registro de decisiones, acuerdo con tu empresa y línea base de imprenta |
 
 ## Cómo está construido este informe
 
