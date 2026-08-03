@@ -1,0 +1,4 @@
+id,negocio,localidad,telefono,web,tiene_formulario,nombre_contacto,canal_probado,fecha_hora_contacto,respondio,minutos_hasta_respuesta,quien_respondio,dejo_buzon,devolvio_llamada,resena_menciona_no_contestan,notas,entrevista_agendada,demo_agendada,estado
+EJEMPLO-1,Reformas García SL,Valencia,600000000,reformasgarcia.es,si,Antonio,formulario,2026-08-07 21:15,no,,,no aplica,no,si,"Formulario enviado viernes noche; sin respuesta a las 72 h",no,no,auditado
+EJEMPLO-2,Clima Norte Instalaciones,Valencia,600000001,climanorte.com,no,,llamada,2026-08-08 18:40,no,,,si,si,no,"Buzon generico; devolvieron la llamada el lunes a las 10:20 (64 h)",si,no,entrevista agendada
+EJEMPLO-3,Obras y Tejados Ruiz,Torrent,600000002,,no,Marta,llamada,2026-08-08 18:55,si,0,la propia dueña,no,no aplica,no,"Contesto al 4 timbre desde la obra; dijo que pierde llamadas a diario",si,si,demo agendada
