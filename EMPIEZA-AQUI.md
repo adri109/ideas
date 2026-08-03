@@ -59,19 +59,24 @@ hacer crecer la imprenta, o a las dos en ese orden.
       permiso: es proponer un plan con una métrica y acordar, en la misma conversación, cómo se
       reparte lo que salga (comisión sobre la línea nueva, bonus por objetivo o revisión con fecha).
       Después, el correo de tres líneas del apartado 13.6.
-- [ ] **Elige el oficio adyacente** al que venderás: serigrafía, bordado, sublimación, vinilo,
-      láser o regalo personalizado. No tu mismo oficio en tu misma zona.
-- [ ] **Lista de 60 talleres** de ese oficio. Buena parte saldrá de la agenda de proveedores y
-      colaboradores de tu propia imprenta, que es contacto templado y no frío.
+- [ ] **Elige los dos mercados a entrevistar**: un oficio adyacente al tuyo (serigrafía, bordado,
+      sublimación, vinilo, láser o regalo personalizado, nunca tu mismo oficio en tu zona) y **un
+      vertical de ticket alto** con el mismo caos de canales.
+- [ ] **Lista de 60 negocios**, unos 20 del oficio adyacente y unos 40 del vertical de ticket alto.
+      Los primeros saldrán en buena parte de la agenda de colaboradores de tu imprenta, que es
+      contacto templado; los segundos son fríos, y para eso está la auditoría.
 
 ## La semana siguiente
 
 - [ ] **Auditoría**: manda una consulta real por WhatsApp y por formulario a 40 de esos talleres,
       un viernes por la noche y un sábado por la tarde. Cronometra las respuestas en
       [`plantillas/01-auditoria-encubierta.csv`](plantillas/01-auditoria-encubierta.csv).
-- [ ] **10-15 entrevistas** de 20 minutos. Guion general en la
-      [plantilla 02](plantillas/02-guion-entrevista.md); las cinco preguntas específicas del
-      sector, en el apartado 12.7.
+- [ ] **15 entrevistas** de 20 minutos, repartidas **5 en talleres de personalización y 10 en
+      servicios de ticket alto** (reformas, instaladores, restauración de siniestros, carpintería a
+      medida). Guion general en la [plantilla 02](plantillas/02-guion-entrevista.md); las cinco
+      preguntas específicas del sector gráfico, en el apartado 12.7. El reparto está explicado en el
+      [capítulo 15](docs/15-revision-de-rumbo.md): se construye donde hay acceso, se vende donde hay
+      ticket.
 - [ ] **Cierra la línea base** y calcula el ahorro.
 
 ## El día 14

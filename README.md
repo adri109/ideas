@@ -60,6 +60,7 @@ direccionales de crypto (1,93).
 | [12. Caso imprenta y DTF](docs/12-caso-imprenta-dtf.md) | Aplicación al caso real: qué ya existe y no hay que construir, dónde queda hueco y la corrección de la economía unitaria |
 | [13. Cuando la empresa es de la familia](docs/13-empresa-familiar.md) | Por qué la validación se distorsiona, las dos rutas que se abren y cómo acordar el reparto del crecimiento |
 | [14. El hallazgo de los cinco canales](docs/14-bandeja-unica.md) | La bandeja única como producto, la separación entre laboratorio y mercado, y la validación de dos mercados en paralelo |
+| [15. Revisión de rumbo](docs/15-revision-de-rumbo.md) | Comprobación de si el plan se había desviado de la idea nº 1, puntuando las tres opciones con el marco del capítulo 1 |
 | [Plantillas](plantillas/) | Selección de vertical, auditoría, guion de entrevista, mensajes, oferta, economía unitaria, registro de decisiones, acuerdo con tu empresa y línea base de imprenta |
 
 ## Cómo está construido este informe
