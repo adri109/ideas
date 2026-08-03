@@ -1,5 +1,8 @@
 # Ingresos con agentes de IA: investigación y plan de acción
 
+> **¿Buscas por dónde empezar hoy?** → [EMPIEZA-AQUI.md](EMPIEZA-AQUI.md): las primeras 72 horas,
+> sin código, sin dinero y sin pedir permiso.
+
 Estudio de las distintas formas de generar ingresos con herramientas automatizadas basadas en
 agentes de IA, con **25 ideas puntuadas y ordenadas**, análisis por bloques (mercados
 financieros, contenido en redes, productos de pago y servicios), y un plan de acción detallado
