@@ -86,10 +86,14 @@ Cambio concreto sobre el sprint del capítulo 12. En las mismas dos semanas:
 | Ventaja | Hablas su idioma y tienes el caso exacto | El mismo esfuerzo vale entre 5 y 10 veces más |
 | Desventaja | Ticket bajo, hacen falta muchos | No conoces el oficio |
 
-**Reparto sugerido de las 10-15 entrevistas: 8 en el mercado A y 5 en el B.** Al día 14 no
-preguntas solo "¿existe el problema?", sino **"¿en cuál de los dos mercados me dicen antes que sí
-y a qué precio?"**. Esa pregunta la contestan los números, no la intuición, y es la que decide
-dónde inviertes el año siguiente.
+**Reparto de las 15 entrevistas: 5 en el mercado A y 10 en el B.** Al día 14 no preguntas solo
+"¿existe el problema?", sino **"¿en cuál de los dos mercados me dicen antes que sí y a qué
+precio?"**. Esa pregunta la contestan los números, no la intuición, y es la que decide dónde
+inviertes el año siguiente.
+
+> El reparto original de este apartado era el inverso (8 en A y 5 en B). Se corrigió en el
+> [capítulo 15](15-revision-de-rumbo.md) al comprobar que la inercia hacia el sector propio estaba
+> desplazando el plan hacia el comprador que peor paga.
 
 Si el mercado B responde mejor, no habrás perdido nada: el producto es el mismo y tu imprenta
 seguirá siendo el sitio donde lo pruebas antes de instalarlo en un cliente que paga diez veces más.
