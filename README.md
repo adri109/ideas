@@ -13,6 +13,10 @@ micro-SaaS vertical.** Primer cobro en 4-8 semanas, capital necesario casi nulo,
 principal el tiempo y no el dinero, y una ruta creíble hasta 5.000-30.000 €/mes hacia el mes
 18 si la ejecución acompaña. El detalle está en el [capítulo 7](docs/07-la-mejor-idea.md).
 
+**Si vas a empezar hoy**, el punto de entrada es el [capítulo 10](docs/10-siguiente-paso.md):
+un sprint de validación de 14 días que cuesta menos de 60 € y termina en una decisión escrita
+de seguir o cambiar, con todo el material listo en [`plantillas/`](plantillas/).
+
 **Lo que hay que evitar como punto de partida**: operar en mercados financieros con capital
 propio. Todo ese bloque ocupa la cola del ranking, y no por prejuicio sino por los datos —71 %
 de cuentas minoristas en pérdidas en brókers regulados, 75-90 % de operadores de bots de crypto
@@ -45,6 +49,8 @@ direccionales de crypto (1,93).
 | [7. La mejor idea](docs/07-la-mejor-idea.md) | Elección razonada, economía unitaria y plan por fases con criterios de continuidad |
 | [8. Riesgos, legal y cumplimiento](docs/08-riesgos-legal-y-cumplimiento.md) | Artículo 50 del Reglamento de IA, límites de la CNMV, MiCA, protección de datos y riesgo de plataforma |
 | [9. Fuentes](docs/09-fuentes.md) | Todas las referencias utilizadas |
+| [10. El siguiente paso](docs/10-siguiente-paso.md) | Sprint de validación de 14 días, día a día, con la puerta go/no-go y sus cuatro desenlaces |
+| [Plantillas](plantillas/) | Selección de vertical, auditoría, guion de entrevista, mensajes, oferta, economía unitaria y registro de decisiones |
 
 ## Cómo está construido este informe
 
