@@ -38,19 +38,24 @@ externa, o haz la prueba con un trabajo cuyo diseño sea vuestro. Es la misma re
 **Por qué:** es el número que convierte la conversación de esta semana en algo concreto, y cuesta
 cero euros.
 
-### 3. Lee tu contrato · 20 minutos, esta noche
+### 3. Responde tres preguntas · 20 minutos, esta noche
 
-Busca cuatro cosas: exclusividad o plena dedicación, no competencia postcontractual, cesión de
-propiedad intelectual y confidencialidad. Detalle de qué significa cada una en
-[`plantillas/07-acuerdo-con-tu-empresa.md`](plantillas/07-acuerdo-con-tu-empresa.md).
+Si la empresa es familiar, el contrato deja de ser el asunto y aparecen estas tres, que decides
+tú solo y que orientan todo lo demás (ver [capítulo 13](docs/13-empresa-familiar.md)):
 
-**Por qué:** determina qué puedes hacer fuera, y es mejor saberlo antes de proponer nada.
+- ¿Cuánto factura la imprenta al año?
+- ¿Hay continuidad familiar, es decir, podrías acabar dirigiéndola o teniendo parte?
+- ¿Quieres un negocio propio, o que este vaya mucho mejor?
+
+**Por qué:** de esas respuestas sale si el peso va a construir un producto para otros talleres, a
+hacer crecer la imprenta, o a las dos en ese orden.
 
 ## Esta semana
 
-- [ ] **La conversación** con quien decide, con el número del nester en la mano. Guion en la
-      plantilla 07. Pides tres cosas: permiso, alcance acotado y el pacto por escrito sobre qué
-      puedes reutilizar fuera.
+- [ ] **La conversación** con quien decide, con el número del nester en la mano. No es pedir
+      permiso: es proponer un plan con una métrica y acordar, en la misma conversación, cómo se
+      reparte lo que salga (comisión sobre la línea nueva, bonus por objetivo o revisión con fecha).
+      Después, el correo de tres líneas del apartado 13.6.
 - [ ] **Elige el oficio adyacente** al que venderás: serigrafía, bordado, sublimación, vinilo,
       láser o regalo personalizado. No tu mismo oficio en tu misma zona.
 - [ ] **Lista de 60 talleres** de ese oficio. Buena parte saldrá de la agenda de proveedores y
