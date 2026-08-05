@@ -20,11 +20,18 @@ export class InboxProcessor {
     return JSON.parse(decoded) as GmailPushNotification;
   }
 
-  async handlePubSubNotification(body: PubSubPushMessage): Promise<{
+  async handlePubSubNotification(
+    body: PubSubPushMessage,
+    userEmail: string,
+  ): Promise<{
     processed: number;
     skipped: number;
     historyId: string | null;
   }> {
+    if (!this.cursor.isConfigured()) {
+      throw new Error("Cursor webhook no configurado");
+    }
+
     const notification = this.decodePubSubMessage(body);
     if (!notification?.historyId) {
       return { processed: 0, skipped: 0, historyId: null };
@@ -43,6 +50,7 @@ export class InboxProcessor {
     }
 
     const messageIds = await this.gmail.listMessagesSinceHistory(
+      userEmail,
       previousHistoryId,
     );
 
@@ -55,7 +63,7 @@ export class InboxProcessor {
         continue;
       }
 
-      const email = await this.gmail.getMessage(messageId);
+      const email = await this.gmail.getMessage(userEmail, messageId);
       if (!email) {
         skipped += 1;
         continue;

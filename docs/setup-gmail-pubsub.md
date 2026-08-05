@@ -10,15 +10,21 @@ Esta guía describe cómo conectar Gmail con `gmail-inbox-agent`.
    - **Gmail API**
    - **Cloud Pub/Sub API**
 
-## 2. Credenciales OAuth
+## 2. Credenciales OAuth (Web application)
 
 1. Ve a **APIs & Services → Credentials**
-2. Crea **OAuth client ID** (tipo Desktop o Web)
-3. Descarga el JSON y guárdalo como `credentials.json` en la raíz del proyecto
-4. En **OAuth consent screen**, añade tu cuenta como usuario de prueba
+2. Crea **OAuth client ID** de tipo **Web application**
+3. Añade la URI de redirección autorizada:
+   ```
+   http://localhost:3000/auth/google/callback
+   ```
+   (En producción usa tu dominio real, p. ej. `https://tu-dominio.com/auth/google/callback`)
+4. Descarga el JSON y guárdalo como `credentials.json` en la raíz del proyecto
+5. En **OAuth consent screen**, añade tu cuenta como usuario de prueba
 
-Scopes necesarios:
+Scopes necesarios (se solicitan automáticamente al iniciar sesión):
 
+- `openid`, `email`, `profile`
 - `https://www.googleapis.com/auth/gmail.readonly`
 - `https://www.googleapis.com/auth/gmail.modify`
 
@@ -62,21 +68,22 @@ ngrok http 3000
 # Usa la URL https://xxxx.ngrok.io/pubsub/gmail como push-endpoint
 ```
 
-## 5. OAuth y watch de Gmail
+## 5. Iniciar sesión y activar vigilancia
 
 ```bash
 cp .env.example .env
-# Completa CURSOR_WEBHOOK_URL, CURSOR_WEBHOOK_TOKEN, PUBSUB_TOPIC
+# Completa SESSION_SECRET, CURSOR_WEBHOOK_URL, CURSOR_WEBHOOK_TOKEN, PUBSUB_TOPIC
 
 npm install
-npm run watch:setup
+npm run dev
 ```
 
-Este comando:
+1. Abre **http://localhost:3000**
+2. Haz clic en **Iniciar sesión con Google**
+3. Autoriza los permisos de Gmail
+4. En el panel, pulsa **Activar vigilancia de bandeja (Gmail Watch)**
 
-1. Te pide autorizar la app en el navegador
-2. Guarda `token.json`
-3. Llama a `users.watch` para empezar a recibir notificaciones
+El token OAuth se guarda automáticamente en `data/tokens/`.
 
 ## 6. Automatización en Cursor
 
@@ -129,6 +136,6 @@ Con cron semanal o Cloud Scheduler apuntando a un job que ejecute ese comando.
 |----------|----------|
 | No llegan notificaciones | Verifica suscripción push y que el endpoint sea HTTPS público |
 | `Invalid configuration` | Revisa `.env` — todos los campos obligatorios |
-| `Missing OAuth token` | Ejecuta `npm run watch:renew` |
+| `Missing OAuth token` | Inicia sesión de nuevo en http://localhost:3000 |
 | Duplicados en Cursor | El store en `data/processed.json` evita reprocesar; bórralo solo si sabes lo que haces |
 | Watch expirado | `npm run watch:renew` |

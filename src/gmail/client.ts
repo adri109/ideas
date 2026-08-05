@@ -1,53 +1,49 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { google, type gmail_v1 } from "googleapis";
 import type { Config } from "../config.js";
 import type { NormalizedEmail } from "../types.js";
-
-const SCOPES = [
-  "https://www.googleapis.com/auth/gmail.readonly",
-  "https://www.googleapis.com/auth/gmail.modify",
-];
+import { createOAuthClient } from "../auth/oauth.js";
+import { TokenStore } from "../auth/token-store.js";
 
 export class GmailService {
-  private client: gmail_v1.Gmail | null = null;
+  private clients = new Map<string, gmail_v1.Gmail>();
 
-  constructor(private readonly config: Config) {}
+  constructor(
+    private readonly config: Config,
+    private readonly tokenStore: TokenStore,
+  ) {}
 
-  async getClient(): Promise<gmail_v1.Gmail> {
-    if (this.client) return this.client;
+  async getClient(email: string): Promise<gmail_v1.Gmail> {
+    const cached = this.clients.get(email);
+    if (cached) return cached;
 
-    const credentials = JSON.parse(
-      await readFile(this.config.GMAIL_CREDENTIALS_PATH, "utf8"),
-    );
-
-    const { client_secret, client_id, redirect_uris } =
-      credentials.installed ?? credentials.web;
-
-    const oAuth2Client = new google.auth.OAuth2(
-      client_id,
-      client_secret,
-      redirect_uris?.[0],
-    );
-
-    try {
-      const token = JSON.parse(
-        await readFile(this.config.GMAIL_TOKEN_PATH, "utf8"),
-      );
-      oAuth2Client.setCredentials(token);
-    } catch {
-      throw new Error(
-        `Missing OAuth token at ${this.config.GMAIL_TOKEN_PATH}. Run: npm run watch:setup`,
-      );
+    const stored = await this.tokenStore.load(email);
+    if (!stored) {
+      throw new Error(`No hay sesión de Gmail para ${email}. Inicia sesión de nuevo.`);
     }
 
-    this.client = google.gmail({ version: "v1", auth: oAuth2Client });
-    return this.client;
+    const auth = await createOAuthClient(this.config);
+    auth.setCredentials(stored.tokens);
+    auth.on("tokens", async (tokens) => {
+      const merged = { ...stored.tokens, ...tokens };
+      await this.tokenStore.save(email, merged);
+    });
+
+    const client = google.gmail({ version: "v1", auth });
+    this.clients.set(email, client);
+    return client;
   }
 
-  async setupWatch(): Promise<{ historyId?: string | null; expiration?: string | null }> {
-    const gmail = await this.getClient();
+  async setupWatch(
+    email: string,
+  ): Promise<{ historyId?: string | null; expiration?: string | null }> {
+    if (!this.config.PUBSUB_TOPIC) {
+      throw new Error("PUBSUB_TOPIC no está configurado en .env");
+    }
+
+    const gmail = await this.getClient(email);
     const response = await gmail.users.watch({
-      userId: this.config.GMAIL_USER_ID,
+      userId: "me",
       requestBody: {
         topicName: this.config.PUBSUB_TOPIC,
         labelIds: ["INBOX"],
@@ -55,20 +51,23 @@ export class GmailService {
     });
     return {
       historyId: response.data.historyId,
-      expiration: response.data.expiration,
+      expiration: response.data.expiration
+        ? new Date(Number(response.data.expiration)).toISOString()
+        : null,
     };
   }
 
   async listMessagesSinceHistory(
+    email: string,
     startHistoryId: string,
   ): Promise<string[]> {
-    const gmail = await this.getClient();
+    const gmail = await this.getClient(email);
     const messageIds: string[] = [];
     let pageToken: string | undefined;
 
     do {
       const response = await gmail.users.history.list({
-        userId: this.config.GMAIL_USER_ID,
+        userId: "me",
         startHistoryId,
         historyTypes: ["messageAdded"],
         pageToken,
@@ -87,10 +86,13 @@ export class GmailService {
     return [...new Set(messageIds)];
   }
 
-  async getMessage(messageId: string): Promise<NormalizedEmail | null> {
-    const gmail = await this.getClient();
+  async getMessage(
+    email: string,
+    messageId: string,
+  ): Promise<NormalizedEmail | null> {
+    const gmail = await this.getClient(email);
     const response = await gmail.users.messages.get({
-      userId: this.config.GMAIL_USER_ID,
+      userId: "me",
       id: messageId,
       format: "full",
     });
@@ -164,50 +166,17 @@ function stripHtml(html: string): string {
     .trim();
 }
 
-export async function saveToken(
-  tokenPath: string,
-  token: Record<string, unknown>,
-): Promise<void> {
-  await writeFile(tokenPath, JSON.stringify(token, null, 2), "utf8");
+export function createOAuthState(secret: string): string {
+  const nonce = randomBytes(16).toString("hex");
+  const sig = createHmac("sha256", secret).update(nonce).digest("hex");
+  return `${nonce}.${sig}`;
 }
 
-export function getOAuthUrl(config: Config): Promise<string> {
-  return readFile(config.GMAIL_CREDENTIALS_PATH, "utf8").then((raw) => {
-    const credentials = JSON.parse(raw);
-    const { client_secret, client_id, redirect_uris } =
-      credentials.installed ?? credentials.web;
-
-    const oAuth2Client = new google.auth.OAuth2(
-      client_id,
-      client_secret,
-      redirect_uris?.[0],
-    );
-
-    return oAuth2Client.generateAuthUrl({
-      access_type: "offline",
-      scope: SCOPES,
-      prompt: "consent",
-    });
-  });
-}
-
-export async function exchangeCodeForToken(
-  config: Config,
-  code: string,
-): Promise<Record<string, unknown>> {
-  const credentials = JSON.parse(
-    await readFile(config.GMAIL_CREDENTIALS_PATH, "utf8"),
-  );
-  const { client_secret, client_id, redirect_uris } =
-    credentials.installed ?? credentials.web;
-
-  const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris?.[0],
-  );
-
-  const { tokens } = await oAuth2Client.getToken(code);
-  await saveToken(config.GMAIL_TOKEN_PATH, tokens as Record<string, unknown>);
-  return tokens as Record<string, unknown>;
+export function verifyOAuthState(secret: string, state: string): boolean {
+  const [nonce, sig] = state.split(".");
+  if (!nonce || !sig) return false;
+  const expected = createHmac("sha256", secret).update(nonce).digest("hex");
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
 }

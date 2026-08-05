@@ -9,7 +9,6 @@
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "watch:renew": "tsx src/cli/renew-watch.ts",
-    "watch:setup": "tsx src/cli/setup-watch.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

@@ -1,18 +1,35 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import type { Config } from "./config.js";
-import { GmailService } from "./gmail/client.js";
+import { isCursorConfigured, isPubsubConfigured } from "./config.js";
+import { GmailService, createOAuthState, verifyOAuthState } from "./gmail/client.js";
 import { CursorWebhookClient } from "./cursor/webhook.js";
 import { ProcessedStore } from "./store/processed.js";
 import { InboxProcessor } from "./pubsub/handler.js";
 import type { PubSubPushMessage } from "./types.js";
+import { SessionManager } from "./auth/session.js";
+import { TokenStore } from "./auth/token-store.js";
+import {
+  exchangeGoogleCode,
+  getGmailProfile,
+  getGoogleAuthUrl,
+} from "./auth/oauth.js";
+import { requireAuth } from "./auth/middleware.js";
+import { dashboardPage, loginPage } from "./views/pages.js";
+
+type AppVariables = {
+  userEmail: string;
+};
 
 export function createApp(config: Config) {
-  const app = new Hono();
-  const gmail = new GmailService(config);
+  const app = new Hono<{ Variables: AppVariables }>();
+  const sessions = new SessionManager(config.SESSION_SECRET);
+  const tokenStore = new TokenStore(config.GMAIL_TOKEN_DIR);
+  const gmail = new GmailService(config, tokenStore);
   const cursor = new CursorWebhookClient(config);
   const store = new ProcessedStore(config.PROCESSED_STORE_PATH);
   const processor = new InboxProcessor(config, gmail, cursor, store);
+  const auth = requireAuth(sessions);
 
   app.get("/health", (c) =>
     c.json({
@@ -22,15 +39,118 @@ export function createApp(config: Config) {
     }),
   );
 
+  app.get("/", (c) => {
+    const session = sessions.getSession(c);
+    if (!session) return c.html(loginPage());
+    return c.redirect("/dashboard");
+  });
+
+  app.get("/auth/google", async (c) => {
+    const state = createOAuthState(config.SESSION_SECRET);
+    const url = await getGoogleAuthUrl(config, state);
+    return c.redirect(url);
+  });
+
+  app.get("/auth/google/callback", async (c) => {
+    const code = c.req.query("code");
+    const state = c.req.query("state");
+    const error = c.req.query("error");
+
+    if (error) {
+      return c.html(
+        loginPage("Google rechazó la autorización. Inténtalo de nuevo."),
+        400,
+      );
+    }
+
+    if (!code || !state || !verifyOAuthState(config.SESSION_SECRET, state)) {
+      return c.html(
+        loginPage("Sesión de autorización inválida. Vuelve a iniciar sesión."),
+        400,
+      );
+    }
+
+    try {
+      const tokens = await exchangeGoogleCode(config, code);
+      const { email } = await getGmailProfile(config, tokens);
+      await tokenStore.save(email, tokens);
+      sessions.setSession(c, email);
+      return c.redirect("/dashboard");
+    } catch (err) {
+      console.error("OAuth callback error:", err);
+      return c.html(
+        loginPage(
+          err instanceof Error
+            ? err.message
+            : "Error al conectar con Google",
+        ),
+        500,
+      );
+    }
+  });
+
+  app.post("/auth/logout", async (c) => {
+    const session = sessions.getSession(c);
+    if (session) await tokenStore.delete(session.email);
+    sessions.clearSession(c);
+    return c.redirect("/");
+  });
+
+  app.get("/dashboard", auth, async (c) => {
+    const email = c.get("userEmail");
+    return c.html(
+      dashboardPage({
+        email,
+        watchConfigured: false,
+        cursorConfigured: isCursorConfigured(config),
+        pubsubConfigured: isPubsubConfigured(config),
+      }),
+    );
+  });
+
+  app.post("/dashboard/activate-watch", auth, async (c) => {
+    const email = c.get("userEmail");
+
+    try {
+      const watch = await gmail.setupWatch(email);
+      return c.html(
+        dashboardPage({
+          email,
+          watchConfigured: true,
+          watchExpiration: watch.expiration,
+          cursorConfigured: isCursorConfigured(config),
+          pubsubConfigured: isPubsubConfigured(config),
+          message: `Vigilancia de bandeja activada. History ID: ${watch.historyId}`,
+        }),
+      );
+    } catch (err) {
+      return c.html(
+        dashboardPage({
+          email,
+          watchConfigured: false,
+          cursorConfigured: isCursorConfigured(config),
+          pubsubConfigured: isPubsubConfigured(config),
+          error: err instanceof Error ? err.message : "Error al activar watch",
+        }),
+        400,
+      );
+    }
+  });
+
   app.post("/pubsub/gmail", async (c) => {
     try {
-      const body = (await c.req.json()) as PubSubPushMessage;
-      const result = await processor.handlePubSubNotification(body);
+      const userEmail = await tokenStore.getPrimaryEmail();
+      if (!userEmail) {
+        return c.json(
+          { ok: false, error: "No hay cuenta de Google conectada" },
+          503,
+        );
+      }
 
-      return c.json({
-        ok: true,
-        ...result,
-      });
+      const body = (await c.req.json()) as PubSubPushMessage;
+      const result = await processor.handlePubSubNotification(body, userEmail);
+
+      return c.json({ ok: true, ...result });
     } catch (error) {
       console.error("Pub/Sub handler error:", error);
       return c.json(
@@ -43,7 +163,7 @@ export function createApp(config: Config) {
     }
   });
 
-  app.post("/webhook/test", async (c) => {
+  app.post("/webhook/test", auth, async (c) => {
     try {
       const email = (await c.req.json()) as Parameters<
         CursorWebhookClient["send"]
@@ -83,9 +203,11 @@ export function startServer(config: Config) {
       console.log(
         `gmail-inbox-agent listening on http://${info.address}:${info.port}`,
       );
-      console.log(`  Health:  GET  /health`);
-      console.log(`  Pub/Sub: POST /pubsub/gmail`);
-      console.log(`  Test:    POST /webhook/test`);
+      console.log(`  Login:     GET  /`);
+      console.log(`  Google:    GET  /auth/google`);
+      console.log(`  Dashboard: GET  /dashboard`);
+      console.log(`  Health:    GET  /health`);
+      console.log(`  Pub/Sub:   POST /pubsub/gmail`);
     },
   );
 }

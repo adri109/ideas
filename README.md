@@ -54,17 +54,22 @@ chmod +x scripts/push-to-new-repo.sh
 
 ```bash
 cp .env.example .env
-# Edita .env con tus valores
+# Edita .env: SESSION_SECRET, credentials.json, etc.
 
 npm install
-npm run watch:setup   # OAuth + configurar watch de Gmail
-npm run dev           # Servidor en http://localhost:3000
+npm run dev           # Abre http://localhost:3000
 ```
 
-### Endpoints
+**Lo primero que verás es la pantalla de inicio de sesión con Google.** Tras conectar tu cuenta, accederás al panel de control para activar la vigilancia de la bandeja.
+
+### Rutas principales
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
+| `GET` | `/` | Pantalla de login (o redirige al panel) |
+| `GET` | `/auth/google` | Inicia OAuth con Google |
+| `GET` | `/auth/google/callback` | Callback de Google |
+| `GET` | `/dashboard` | Panel de control (requiere sesión) |
 | `GET` | `/health` | Estado del servicio |
 | `POST` | `/pubsub/gmail` | Recibe push de Google Pub/Sub |
 | `POST` | `/webhook/test` | Envía un payload de prueba a Cursor |
