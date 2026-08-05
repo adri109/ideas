@@ -1,0 +1,29 @@
+{
+  "name": "gmail-inbox-agent",
+  "version": "0.1.0",
+  "description": "Middleware Gmail → webhook para automatizaciones de Cursor Agents",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "watch:renew": "tsx src/cli/renew-watch.ts",
+    "watch:setup": "tsx src/cli/setup-watch.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "googleapis": "^148.0.0",
+    "hono": "^4.7.7",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
