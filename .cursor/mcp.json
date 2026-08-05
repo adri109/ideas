@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "gmail-inbox-agent": {
+      "command": "npm",
+      "args": ["run", "mcp"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

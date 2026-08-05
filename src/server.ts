@@ -179,6 +179,37 @@ export function createApp(config: Config) {
     }
   });
 
+  app.get("/api/inbox", auth, async (c) => {
+    const email = c.get("userEmail");
+    try {
+      const limit = Number(c.req.query("limit") ?? 25);
+      const messages = await gmail.listInbox(email, Math.min(limit, 50));
+      return c.json({ account: email, count: messages.length, messages });
+    } catch (err) {
+      return c.json(
+        { error: err instanceof Error ? err.message : "Error" },
+        500,
+      );
+    }
+  });
+
+  app.get("/api/inbox/:messageId", auth, async (c) => {
+    const email = c.get("userEmail");
+    const messageId = c.req.param("messageId");
+    if (!messageId) return c.json({ error: "messageId required" }, 400);
+
+    try {
+      const message = await gmail.getMessage(email, messageId);
+      if (!message) return c.json({ error: "Not found" }, 404);
+      return c.json(message);
+    } catch (err) {
+      return c.json(
+        { error: err instanceof Error ? err.message : "Error" },
+        500,
+      );
+    }
+  });
+
   app.get("/dashboard", auth, (c) => c.redirect("/inbox"));
 
   app.post("/dashboard/activate-watch", auth, async (c) => {

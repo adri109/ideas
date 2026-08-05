@@ -43,6 +43,14 @@ chmod +x scripts/push-to-new-repo.sh
 ./scripts/push-to-new-repo.sh
 ```
 
+## Conectar con Cursor (MCP)
+
+Cursor puede leer tu bandeja directamente desde el chat. Guía completa en [`docs/cursor-mcp.md`](docs/cursor-mcp.md).
+
+El proyecto incluye `.cursor/mcp.json` — al abrirlo en Cursor, tendrás herramientas como `list_inbox`, `get_email` y `search_emails`.
+
+**Requisito:** haber iniciado sesión en la app web al menos una vez.
+
 ## Requisitos
 
 - Node.js 20+

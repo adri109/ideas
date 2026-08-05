@@ -103,6 +103,56 @@ export class GmailService {
     return messages;
   }
 
+  async searchInbox(
+    email: string,
+    query: string,
+    maxResults = 25,
+  ): Promise<InboxMessage[]> {
+    const gmail = await this.getClient(email);
+    const list = await gmail.users.messages.list({
+      userId: "me",
+      q: query,
+      maxResults,
+    });
+
+    const ids = (list.data.messages ?? [])
+      .map((m) => m.id)
+      .filter((id): id is string => Boolean(id));
+
+    const messages = await Promise.all(
+      ids.map(async (id) => {
+        const response = await gmail.users.messages.get({
+          userId: "me",
+          id,
+          format: "metadata",
+          metadataHeaders: ["From", "Subject", "Date"],
+        });
+
+        const msg = response.data;
+        const headers = msg.payload?.headers ?? [];
+        const getHeader = (name: string) =>
+          headers.find((h) => h.name?.toLowerCase() === name.toLowerCase())
+            ?.value ?? "";
+
+        const receivedAt = msg.internalDate
+          ? new Date(Number(msg.internalDate)).toISOString()
+          : new Date().toISOString();
+
+        return {
+          messageId: id,
+          from: getHeader("From") || "(desconocido)",
+          subject: getHeader("Subject") || "(sin asunto)",
+          snippet: msg.snippet ?? "",
+          receivedAt,
+          isUnread: (msg.labelIds ?? []).includes("UNREAD"),
+          gmailLink: `https://mail.google.com/mail/u/0/#inbox/${id}`,
+        } satisfies InboxMessage;
+      }),
+    );
+
+    return messages;
+  }
+
   async listMessagesSinceHistory(
     email: string,
     startHistoryId: string,

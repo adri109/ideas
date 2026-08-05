@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
+    "mcp": "tsx src/mcp/index.ts",
     "watch:renew": "tsx src/cli/renew-watch.ts",
     "typecheck": "tsc --noEmit"
   },
@@ -16,10 +17,11 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.14.1",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "dotenv": "^17.4.2",
     "googleapis": "^148.0.0",
     "hono": "^4.7.7",
-    "zod": "^3.24.3"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
