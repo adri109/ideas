@@ -244,13 +244,20 @@ export function inboxPage(opts: InboxPageOptions): string {
 
   const automationSection = `
     <details class="automation-box">
-      <summary>Automatización avanzada (opcional)</summary>
+      <summary>Automatización Cursor (Opción A) — correo nuevo → agente automático</summary>
       <div class="info-box" style="margin-top:12px">
-        Solo necesitas esto si quieres que un agente de Cursor procese correos automáticamente al llegar.<br><br>
-        Pub/Sub: ${opts.pubsubConfigured ? "✓ configurado" : "✗ no configurado"}<br>
-        Cursor webhook: ${opts.cursorConfigured ? "✓ configurado" : "✗ no configurado"}
+        <strong>Estado</strong><br>
+        Pub/Sub: ${opts.pubsubConfigured ? "✓ configurado" : "✗ falta PUBSUB_TOPIC en .env"}<br>
+        Cursor webhook: ${opts.cursorConfigured ? "✓ configurado" : "✗ falta CURSOR_WEBHOOK_URL en .env"}<br><br>
+        Guía paso a paso: <code>docs/setup-option-a.md</code><br><br>
+        <strong>Túnel Pub/Sub push:</strong><br>
+        <code style="word-break:break-all">https://oil-enforcement-allows-coupled.trycloudflare.com/pubsub/gmail</code><br><br>
+        <strong>PUBSUB_TOPIC:</strong><br>
+        <code>projects/project-cea767a6-0d8a-43d9-aca/topics/gmail-inbox</code>
       </div>
-      ${opts.pubsubConfigured ? `<form method="post" action="/dashboard/activate-watch"><button type="submit" class="btn btn-secondary btn-sm">Activar vigilancia automática</button></form>` : ""}
+      ${opts.pubsubConfigured && opts.cursorConfigured
+        ? `<form method="post" action="/dashboard/activate-watch"><button type="submit" class="btn btn-primary btn-sm">Activar vigilancia de bandeja</button></form>`
+        : `<p style="color:#94a3b8;font-size:0.85rem;margin-top:8px">Completa Pub/Sub y el webhook de Cursor en .env, reinicia el servidor, y luego activa la vigilancia.</p>`}
     </details>
   `;
 
