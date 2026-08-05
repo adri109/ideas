@@ -29,6 +29,20 @@ gmail-inbox-agent  ──POST──▶  Cursor Automation Webhook
 data/processed.json (deduplicación)
 ```
 
+## Repositorio
+
+Este proyecto está pensado para vivir en **`adri109/gmail-inbox-agent`**.
+
+Si el repositorio aún no existe en GitHub:
+
+1. Créalo vacío en [github.com/new](https://github.com/new) con el nombre `gmail-inbox-agent`
+2. Ejecuta:
+
+```bash
+chmod +x scripts/push-to-new-repo.sh
+./scripts/push-to-new-repo.sh
+```
+
 ## Requisitos
 
 - Node.js 20+
