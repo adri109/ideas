@@ -8,6 +8,7 @@ export const GOOGLE_SCOPES = [
   "profile",
   "https://www.googleapis.com/auth/gmail.readonly",
   "https://www.googleapis.com/auth/gmail.modify",
+  "https://www.googleapis.com/auth/gmail.send",
 ];
 
 export async function createOAuthClient(config: Config) {

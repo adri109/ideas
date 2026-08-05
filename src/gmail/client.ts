@@ -219,6 +219,62 @@ export class GmailService {
       gmailLink: `https://mail.google.com/mail/u/0/#inbox/${message.id}`,
     };
   }
+
+  async sendEmail(
+    accountEmail: string,
+    options: {
+      to: string;
+      subject: string;
+      body: string;
+      threadId?: string;
+      inReplyToMessageId?: string;
+    },
+  ): Promise<{ id: string; threadId: string }> {
+    const gmail = await this.getClient(accountEmail);
+    let inReplyTo: string | undefined;
+    let references: string | undefined;
+
+    if (options.inReplyToMessageId) {
+      const original = await gmail.users.messages.get({
+        userId: "me",
+        id: options.inReplyToMessageId,
+        format: "metadata",
+        metadataHeaders: ["Message-ID", "References"],
+      });
+      const headers = original.data.payload?.headers ?? [];
+      const messageIdHeader = headers.find(
+        (h) => h.name?.toLowerCase() === "message-id",
+      )?.value;
+      const refsHeader = headers.find(
+        (h) => h.name?.toLowerCase() === "references",
+      )?.value;
+      inReplyTo = messageIdHeader ?? undefined;
+      references = [refsHeader, messageIdHeader].filter(Boolean).join(" ") || undefined;
+    }
+
+    const raw = buildRawEmail({
+      from: accountEmail,
+      to: options.to,
+      subject: options.subject,
+      body: options.body,
+      inReplyTo,
+      references,
+    });
+
+    const response = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw,
+        threadId: options.threadId,
+      },
+    });
+
+    if (!response.data.id || !response.data.threadId) {
+      throw new Error("Gmail no devolvió id del mensaje enviado");
+    }
+
+    return { id: response.data.id, threadId: response.data.threadId };
+  }
 }
 
 function extractBodyText(
@@ -260,6 +316,40 @@ function stripHtml(html: string): string {
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function encodeMimeHeaderValue(value: string): string {
+  if (/^[\x20-\x7E]*$/.test(value)) return value;
+  const encoded = Buffer.from(value, "utf8").toString("base64");
+  return `=?UTF-8?B?${encoded}?=`;
+}
+
+function buildRawEmail(options: {
+  from: string;
+  to: string;
+  subject: string;
+  body: string;
+  inReplyTo?: string;
+  references?: string;
+}): string {
+  const bodyBase64 = Buffer.from(options.body, "utf8").toString("base64");
+  const lines = [
+    `From: ${options.from}`,
+    `To: ${options.to}`,
+    `Subject: ${encodeMimeHeaderValue(options.subject)}`,
+    "MIME-Version: 1.0",
+    "Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64",
+  ];
+  if (options.inReplyTo) lines.push(`In-Reply-To: ${options.inReplyTo}`);
+  if (options.references) lines.push(`References: ${options.references}`);
+  lines.push("", bodyBase64);
+
+  return Buffer.from(lines.join("\r\n"), "utf8")
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 }
 
 export function createOAuthState(secret: string): string {
