@@ -15,7 +15,7 @@ import {
   getGoogleAuthUrl,
 } from "./auth/oauth.js";
 import { requireAuth } from "./auth/middleware.js";
-import { dashboardPage, loginPage } from "./views/pages.js";
+import { inboxPage, loginPage, messagePage } from "./views/pages.js";
 
 type AppVariables = {
   userEmail: string;
@@ -42,7 +42,7 @@ export function createApp(config: Config) {
   app.get("/", (c) => {
     const session = sessions.getSession(c);
     if (!session) return c.html(loginPage());
-    return c.redirect("/dashboard");
+    return c.redirect("/inbox");
   });
 
   app.get("/auth/google", async (c) => {
@@ -75,7 +75,7 @@ export function createApp(config: Config) {
       const { email } = await getGmailProfile(config, tokens);
       await tokenStore.save(email, tokens);
       sessions.setSession(c, email);
-      return c.redirect("/dashboard");
+      return c.redirect("/inbox");
     } catch (err) {
       console.error("OAuth callback error:", err);
       return c.html(
@@ -96,44 +96,99 @@ export function createApp(config: Config) {
     return c.redirect("/");
   });
 
-  app.get("/dashboard", auth, async (c) => {
+  app.get("/inbox", auth, async (c) => {
     const email = c.get("userEmail");
-    return c.html(
-      dashboardPage({
-        email,
-        watchConfigured: false,
-        cursorConfigured: isCursorConfigured(config),
-        pubsubConfigured: isPubsubConfigured(config),
-      }),
-    );
+    try {
+      const messages = await gmail.listInbox(email);
+      return c.html(
+        inboxPage({
+          email,
+          messages,
+          cursorConfigured: isCursorConfigured(config),
+          pubsubConfigured: isPubsubConfigured(config),
+        }),
+      );
+    } catch (err) {
+      return c.html(
+        inboxPage({
+          email,
+          messages: [],
+          cursorConfigured: isCursorConfigured(config),
+          pubsubConfigured: isPubsubConfigured(config),
+          error: err instanceof Error ? err.message : "Error al cargar la bandeja",
+        }),
+        500,
+      );
+    }
   });
+
+  app.get("/inbox/:messageId", auth, async (c) => {
+    const email = c.get("userEmail");
+    const messageId = c.req.param("messageId");
+    if (!messageId) return c.redirect("/inbox");
+
+    try {
+      const message = await gmail.getMessage(email, messageId);
+      if (!message) {
+        return c.html(
+          messagePage({
+            email,
+            message: {
+              from: "",
+              to: "",
+              subject: "No encontrado",
+              receivedAt: new Date().toISOString(),
+              bodyText: "",
+              gmailLink: "#",
+            },
+            error: "Correo no encontrado",
+          }),
+          404,
+        );
+      }
+
+      return c.html(
+        messagePage({
+          email,
+          message: {
+            from: message.from,
+            to: message.to,
+            subject: message.subject,
+            receivedAt: message.receivedAt,
+            bodyText: message.bodyText,
+            gmailLink: message.gmailLink,
+          },
+        }),
+      );
+    } catch (err) {
+      return c.html(
+        messagePage({
+          email,
+          message: {
+            from: "",
+            to: "",
+            subject: "Error",
+            receivedAt: new Date().toISOString(),
+            bodyText: "",
+            gmailLink: "#",
+          },
+          error: err instanceof Error ? err.message : "Error al cargar el correo",
+        }),
+        500,
+      );
+    }
+  });
+
+  app.get("/dashboard", auth, (c) => c.redirect("/inbox"));
 
   app.post("/dashboard/activate-watch", auth, async (c) => {
     const email = c.get("userEmail");
 
     try {
       const watch = await gmail.setupWatch(email);
-      return c.html(
-        dashboardPage({
-          email,
-          watchConfigured: true,
-          watchExpiration: watch.expiration,
-          cursorConfigured: isCursorConfigured(config),
-          pubsubConfigured: isPubsubConfigured(config),
-          message: `Vigilancia de bandeja activada. History ID: ${watch.historyId}`,
-        }),
-      );
+      return c.redirect("/inbox?watch=activated");
     } catch (err) {
-      return c.html(
-        dashboardPage({
-          email,
-          watchConfigured: false,
-          cursorConfigured: isCursorConfigured(config),
-          pubsubConfigured: isPubsubConfigured(config),
-          error: err instanceof Error ? err.message : "Error al activar watch",
-        }),
-        400,
-      );
+      return c.redirect(`/inbox?error=${encodeURIComponent(err instanceof Error ? err.message : "Error al activar watch")}`);
     }
   });
 
@@ -205,7 +260,7 @@ export function startServer(config: Config) {
       );
       console.log(`  Login:     GET  /`);
       console.log(`  Google:    GET  /auth/google`);
-      console.log(`  Dashboard: GET  /dashboard`);
+      console.log(`  Inbox:     GET  /inbox`);
       console.log(`  Health:    GET  /health`);
       console.log(`  Pub/Sub:   POST /pubsub/gmail`);
     },

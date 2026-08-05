@@ -136,6 +136,7 @@ Con cron semanal o Cloud Scheduler apuntando a un job que ejecute ese comando.
 |----------|----------|
 | No llegan notificaciones | Verifica suscripción push y que el endpoint sea HTTPS público |
 | `Invalid configuration` | Revisa `.env` — todos los campos obligatorios |
-| `Missing OAuth token` | Inicia sesión de nuevo en http://localhost:3000 |
+| `Missing OAuth token` | Inicia sesión de nuevo en la URL pública de la app |
+| `localhost rechazó la conexión` tras login Google | Usa la URL del túnel (no localhost) y añade su callback en Google Cloud |
 | Duplicados en Cursor | El store en `data/processed.json` evita reprocesar; bórralo solo si sabes lo que haces |
 | Watch expirado | `npm run watch:renew` |

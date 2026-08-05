@@ -1,7 +1,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { google, type gmail_v1 } from "googleapis";
 import type { Config } from "../config.js";
-import type { NormalizedEmail } from "../types.js";
+import type { NormalizedEmail, InboxMessage } from "../types.js";
 import { createOAuthClient } from "../auth/oauth.js";
 import { TokenStore } from "../auth/token-store.js";
 
@@ -55,6 +55,52 @@ export class GmailService {
         ? new Date(Number(response.data.expiration)).toISOString()
         : null,
     };
+  }
+
+  async listInbox(email: string, maxResults = 25): Promise<InboxMessage[]> {
+    const gmail = await this.getClient(email);
+    const list = await gmail.users.messages.list({
+      userId: "me",
+      labelIds: ["INBOX"],
+      maxResults,
+    });
+
+    const ids = (list.data.messages ?? [])
+      .map((m) => m.id)
+      .filter((id): id is string => Boolean(id));
+
+    const messages = await Promise.all(
+      ids.map(async (id) => {
+        const response = await gmail.users.messages.get({
+          userId: "me",
+          id,
+          format: "metadata",
+          metadataHeaders: ["From", "Subject", "Date"],
+        });
+
+        const msg = response.data;
+        const headers = msg.payload?.headers ?? [];
+        const getHeader = (name: string) =>
+          headers.find((h) => h.name?.toLowerCase() === name.toLowerCase())
+            ?.value ?? "";
+
+        const receivedAt = msg.internalDate
+          ? new Date(Number(msg.internalDate)).toISOString()
+          : new Date().toISOString();
+
+        return {
+          messageId: id,
+          from: getHeader("From") || "(desconocido)",
+          subject: getHeader("Subject") || "(sin asunto)",
+          snippet: msg.snippet ?? "",
+          receivedAt,
+          isUnread: (msg.labelIds ?? []).includes("UNREAD"),
+          gmailLink: `https://mail.google.com/mail/u/0/#inbox/${id}`,
+        } satisfies InboxMessage;
+      }),
+    );
+
+    return messages;
   }
 
   async listMessagesSinceHistory(

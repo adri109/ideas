@@ -99,9 +99,69 @@ const STYLES = `
   }
   .info-box strong { color: #e2e8f0; }
   form { display: contents; }
+  .wide .card { max-width: 720px; }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .topbar h1 { margin: 0; font-size: 1.5rem; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+  .btn-sm {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+  .email-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .email-item {
+    display: block;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s;
+  }
+  .email-item:hover { border-color: #3b82f6; }
+  .email-item.unread { border-left: 3px solid #3b82f6; }
+  .email-row { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+  .email-from { font-weight: 600; color: #f8fafc; font-size: 0.95rem; }
+  .email-date { color: #64748b; font-size: 0.8rem; white-space: nowrap; }
+  .email-subject { color: #e2e8f0; font-size: 0.9rem; margin-bottom: 4px; }
+  .email-snippet { color: #94a3b8; font-size: 0.85rem; line-height: 1.4;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .empty { text-align: center; color: #94a3b8; padding: 32px; }
+  .message-meta { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #334155; }
+  .message-meta div { margin-bottom: 6px; color: #94a3b8; font-size: 0.9rem; }
+  .message-meta strong { color: #e2e8f0; }
+  .message-body {
+    white-space: pre-wrap;
+    line-height: 1.6;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .automation-box {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #334155;
+  }
+  .automation-box summary {
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
 `;
 
-function layout(title: string, body: string): string {
+function layout(title: string, body: string, wide = false): string {
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -110,7 +170,7 @@ function layout(title: string, body: string): string {
   <title>${title} — Gmail Inbox Agent</title>
   <style>${STYLES}</style>
 </head>
-<body>
+<body class="${wide ? "wide" : ""}">
   <div class="card">${body}</div>
 </body>
 </html>`;
@@ -141,6 +201,133 @@ export function loginPage(error?: string): string {
     </a>
   `,
   );
+}
+
+export interface InboxPageOptions {
+  email: string;
+  messages: Array<{
+    messageId: string;
+    from: string;
+    subject: string;
+    snippet: string;
+    receivedAt: string;
+    isUnread: boolean;
+  }>;
+  cursorConfigured: boolean;
+  pubsubConfigured: boolean;
+  error?: string;
+}
+
+export function inboxPage(opts: InboxPageOptions): string {
+  const errorBlock = opts.error
+    ? `<div class="error">${escapeHtml(opts.error)}</div>`
+    : "";
+
+  const list =
+    opts.messages.length === 0
+      ? `<div class="empty">No hay correos en tu bandeja de entrada.</div>`
+      : `<ul class="email-list">${opts.messages
+          .map(
+            (m) => `
+        <li>
+          <a href="/inbox/${escapeHtml(m.messageId)}" class="email-item${m.isUnread ? " unread" : ""}">
+            <div class="email-row">
+              <span class="email-from">${escapeHtml(shortFrom(m.from))}</span>
+              <span class="email-date">${escapeHtml(formatDate(m.receivedAt))}</span>
+            </div>
+            <div class="email-subject">${escapeHtml(m.subject)}</div>
+            <div class="email-snippet">${escapeHtml(m.snippet)}</div>
+          </a>
+        </li>`,
+          )
+          .join("")}</ul>`;
+
+  const automationSection = `
+    <details class="automation-box">
+      <summary>Automatización avanzada (opcional)</summary>
+      <div class="info-box" style="margin-top:12px">
+        Solo necesitas esto si quieres que un agente de Cursor procese correos automáticamente al llegar.<br><br>
+        Pub/Sub: ${opts.pubsubConfigured ? "✓ configurado" : "✗ no configurado"}<br>
+        Cursor webhook: ${opts.cursorConfigured ? "✓ configurado" : "✗ no configurado"}
+      </div>
+      ${opts.pubsubConfigured ? `<form method="post" action="/dashboard/activate-watch"><button type="submit" class="btn btn-secondary btn-sm">Activar vigilancia automática</button></form>` : ""}
+    </details>
+  `;
+
+  return layout(
+    "Bandeja",
+    `
+    <div class="topbar">
+      <h1>Bandeja de entrada</h1>
+      <div class="topbar-actions">
+        <a href="/inbox" class="btn btn-secondary btn-sm">Actualizar</a>
+        <form method="post" action="/auth/logout" style="display:inline">
+          <button type="submit" class="btn btn-danger btn-sm">Salir</button>
+        </form>
+      </div>
+    </div>
+    <p class="subtitle" style="margin-bottom:20px">${escapeHtml(opts.email)}</p>
+    ${errorBlock}
+    ${list}
+    ${automationSection}
+  `,
+    true,
+  );
+}
+
+export interface MessagePageOptions {
+  email: string;
+  message: {
+    from: string;
+    to: string;
+    subject: string;
+    receivedAt: string;
+    bodyText: string;
+    gmailLink: string;
+  };
+  error?: string;
+}
+
+export function messagePage(opts: MessagePageOptions): string {
+  const { message } = opts;
+  return layout(
+    message.subject,
+    `
+    <div class="topbar">
+      <a href="/inbox" class="btn btn-secondary btn-sm">← Volver</a>
+      <form method="post" action="/auth/logout" style="display:inline">
+        <button type="submit" class="btn btn-danger btn-sm">Salir</button>
+      </form>
+    </div>
+    <h1 style="font-size:1.25rem;margin-bottom:16px">${escapeHtml(message.subject)}</h1>
+    <div class="message-meta">
+      <div><strong>De:</strong> ${escapeHtml(message.from)}</div>
+      <div><strong>Para:</strong> ${escapeHtml(message.to)}</div>
+      <div><strong>Fecha:</strong> ${escapeHtml(formatDate(message.receivedAt))}</div>
+      <div><a href="${escapeHtml(message.gmailLink)}" target="_blank" rel="noopener" style="color:#3b82f6">Abrir en Gmail</a></div>
+    </div>
+    <div class="message-body">${escapeHtml(message.bodyText || "(sin contenido de texto)")}</div>
+  `,
+    true,
+  );
+}
+
+function shortFrom(from: string): string {
+  const match = from.match(/^"?([^"<]+)"?\s*</);
+  return match?.[1]?.trim() || from.split("@")[0] || from;
+}
+
+function formatDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString("es-ES", {
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return iso;
+  }
 }
 
 export interface DashboardOptions {

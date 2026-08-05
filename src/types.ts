@@ -38,3 +38,13 @@ export interface GmailPushNotification {
   emailAddress: string;
   historyId: string;
 }
+
+export interface InboxMessage {
+  messageId: string;
+  from: string;
+  subject: string;
+  snippet: string;
+  receivedAt: string;
+  isUnread: boolean;
+  gmailLink: string;
+}
